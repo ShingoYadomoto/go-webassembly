@@ -6,18 +6,15 @@
         var img = new Image();
         img.src = "./image/gopher.png";
 
-        function test() {
+        function test(event) {
+            console.log(event);
             var canvas = document.getElementById('sample');
-            if (canvas.getContext) {
-                var context = canvas.getContext('2d');
-                var x = Math.floor( Math.random() * 1001 );
-                var y = Math.floor( Math.random() * 1001 );
-                context.drawImage(img, x,y);
-            }
+            var context = canvas.getContext('2d');
+            context.drawImage(img, event.pageX,event.pageY);
         }
     </script>
 </head>
-<body onMousemove="test()">
+<body onmousemove="test(event)">
     <canvas width="1500" height="1000" id="sample"></canvas>
 </body>
 </html>
