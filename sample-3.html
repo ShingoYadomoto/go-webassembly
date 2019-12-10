@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script type="text/javascript">
+        var img = new Image();
+        img.src = "./image/gopher.png";
+
+        function test() {
+            var canvas = document.getElementById('sample');
+            if (canvas.getContext) {
+                var context = canvas.getContext('2d');
+                var x = Math.floor( Math.random() * 1001 );
+                var y = Math.floor( Math.random() * 1001 );
+                context.drawImage(img, x,y);
+            }
+        }
+    </script>
+</head>
+<body onMousemove="test()">
+    <canvas width="1500" height="1000" id="sample"></canvas>
+</body>
+</html>

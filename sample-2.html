@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+
+<body>
+
+<script src="wasm_exec.js"></script>
+<script>
+    const go = new Go();
+    let mod, inst;
+    WebAssembly.instantiateStreaming(fetch("test-2.wasm"), go.importObject).then(async (result) => {
+        mod = result.module;
+        inst = result.instance;
+
+        await go.run(inst);
+        inst = await WebAssembly.instantiate(mod, go.importObject); // reset instance
+    }).catch((err) => {
+        console.error(err);
+    });
+</script>
+
+<canvas width="1500" height="1000" id="sample"></canvas>
+
+</body>
+
+</html>
