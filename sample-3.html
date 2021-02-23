@@ -1,20 +1,38 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <script type="text/javascript">
-        var img = new Image();
-        img.src = "./image/gopher.png";
-
-        function test(event) {
-            console.log(event);
-            var canvas = document.getElementById('sample');
-            var context = canvas.getContext('2d');
-            context.drawImage(img, event.pageX,event.pageY);
-        }
-    </script>
+    <meta charset="utf-8">
+    <title>Go wasm</title>
 </head>
-<body onmousemove="test(event)">
-    <canvas width="1500" height="1000" id="sample"></canvas>
+<body>
+
+<div>
+    <img id="img" src="./image/gopher.png">
+</div>
+
+
+<script src="wasm_exec.js"></script>
+<script>
+    const go = new Go();
+    // memoryBytes is an Uint8Array pointing to the webassembly linear memory.
+    let memoryBytes;
+    let mod, inst;
+    let imageType;
+    WebAssembly.instantiateStreaming(fetch("test-3.wasm", {cache: 'no-cache'}), go.importObject).then((result) => {
+        mod = result.module;
+        inst = result.instance;
+        memoryBytes = new Uint8Array(inst.exports.mem.buffer);
+        run();
+    });
+    async function run() {
+        await go.run(inst);
+    }
+    // displayImage takes the pointer to the target image in the wasm linear memory
+    // and its length. Gets the resulting byte slice and creates an image blob.
+    function displayImage(buf) {
+        let blob = new Blob([buf], {'type': imageType});
+        document.getElementById('targetImg').src = URL.createObjectURL(blob);
+    }
+</script>
 </body>
 </html>
